@@ -1,4 +1,5 @@
 import cv2
+import requests
 import asyncio
 from pytz import timezone
 from datetime import datetime
@@ -43,7 +44,10 @@ class UserInterfaceWindow(ctk.CTk):
         self.setup_ui()
 
     def _center(self) -> None:
-        """ Centers the application window on the screen based on the main screen dimensions and window size. """
+        """ 
+        Centers the application window on the screen based on the main screen dimensions
+        and window size.
+        """
         screen_width: int = self.winfo_screenwidth()
         screen_height: int = self.winfo_screenheight()
 
@@ -119,7 +123,7 @@ class UserInterfaceWindow(ctk.CTk):
 
 
     async def capture_and_count_people(self) -> None:
-        """ Captures a frame asynchronously and processes YOLO detection without blocking the UI. """
+        """Captures a frame asynchronously and processes YOLO detection without blocking the UI."""
 
         # Disable the button while processing
         self.call_button.configure(state="disabled")
@@ -133,7 +137,7 @@ class UserInterfaceWindow(ctk.CTk):
 
 
     def process_camera(self) -> str:
-        """ Processes the camera capture and person detection, returning (message). """
+        """Processes the camera capture and person detection, returning (message)."""
         
         with MyVideoCapture(self.camera_index) as cap:
             if not cap.isOpened():
@@ -154,14 +158,16 @@ class UserInterfaceWindow(ctk.CTk):
         
         Args:
             text (str): message to be written.            
+        Note:
+            At least one of text or people_count must be provided.
         """
-        
-        time_zone = timezone("Israel")
+        user_timezone = requests.get('https://ipapi.co/timezone/').text
+        time_zone = timezone(user_timezone)
         date_time = datetime.now(time_zone)
+        
         formatted_time: str = date_time.strftime("%H:%M:%S")
         message: str = f"({formatted_time}) {text}\n"
 
-    
         self.text_box.configure(state="normal")
         self.text_box.insert("end", message)
         self.text_box.configure(state="disabled")
