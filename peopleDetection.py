@@ -83,7 +83,7 @@ class UserInterfaceWindow(ctk.CTk):
         # Create textbox with scrollbar
         self.text_box: ctk.CTkTextbox = ctk.CTkTextbox(
             self.text_frame,
-            font=ctk.CTkFont(family="Arial", size=20),
+            font=ctk.CTkFont(family="Arial", size=14),
             wrap="word",
             height=200,
         )
