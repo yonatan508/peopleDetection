@@ -43,10 +43,7 @@ class UserInterfaceWindow(ctk.CTk):
         self.setup_ui()
 
     def _center(self) -> None:
-        """ 
-        Centers the application window on the screen based on the main screen dimensions
-        and window size.
-        """
+        """ Centers the application window on the screen based on the main screen dimensions and window size. """
         screen_width: int = self.winfo_screenwidth()
         screen_height: int = self.winfo_screenheight()
 
@@ -122,7 +119,7 @@ class UserInterfaceWindow(ctk.CTk):
 
 
     async def capture_and_count_people(self) -> None:
-        """Captures a frame asynchronously and processes YOLO detection without blocking the UI."""
+        """ Captures a frame asynchronously and processes YOLO detection without blocking the UI. """
 
         # Disable the button while processing
         self.call_button.configure(state="disabled")
@@ -136,20 +133,17 @@ class UserInterfaceWindow(ctk.CTk):
 
 
     def process_camera(self) -> str:
-        """Processes the camera capture and person detection, returning (message)."""
+        """ Processes the camera capture and person detection, returning (message). """
         
         with MyVideoCapture(self.camera_index) as cap:
             if not cap.isOpened():
-                print("hii")
                 return "Error: No camera detected."
 
             _, frame = cap.read()
-            print("got here")
 
             # Perform detection, but ONLY for 'person' (class 0)
             results = self.model(frame, classes=[0])
             num_people = len(results[0].boxes)
-            print("got here2")
 
 
         return f"Number of people detected: {num_people}"
@@ -160,20 +154,18 @@ class UserInterfaceWindow(ctk.CTk):
         
         Args:
             text (str): message to be written.            
-        Note:
-            At least one of text or people_count must be provided.
         """
+        
         time_zone = timezone("Israel")
         date_time = datetime.now(time_zone)
         formatted_time: str = date_time.strftime("%H:%M:%S")
         message: str = f"({formatted_time}) {text}\n"
-        print("got here3")
 
+    
         self.text_box.configure(state="normal")
         self.text_box.insert("end", message)
         self.text_box.configure(state="disabled")
         self.text_box.see("end")  # Auto-scroll to the bottom
-        print("got here4")
 
 
 if __name__ == "__main__":
